@@ -1,0 +1,176 @@
+{
+  "lang": "en-US",
+  "title": "Jordan’s 2026, wrapped",
+  "label": "Jordan’s 2026 on Claude, a recap you tap through",
+  "slides": [
+    {
+      "type": "intro",
+      "giant": "2026",
+      "combo": "plum/cobalt",
+      "headline": "Jordan, here’s your 2026 on Claude.",
+      "body": ["Eleven months, a lot of open tabs."],
+      "hint": "Tap to unwrap."
+    },
+    {
+      "type": "month",
+      "giant": "jan",
+      "combo": "cobalt/plum",
+      "headline": "New year, new lesson plans.",
+      "items": [
+        "Rebuilt your eighth-grade water cycle unit around a hands-on lab",
+        "Wrote a grading rubric your students could actually read",
+        "Named your sourdough starter Gerald"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "feb",
+      "combo": "sun/tang",
+      "headline": "The spreadsheet month.",
+      "items": [
+        "Built a gradebook template that color-codes late work",
+        "Drafted the science fair parent letter in English and Spanish",
+        "Planned a sign-out system for the classroom library"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "mar",
+      "combo": "pink/sun",
+      "headline": "Science fair, survived.",
+      "items": [
+        "Coached 23 projects from “I have no idea” to poster board",
+        "Wrote the judges’ score sheets",
+        "Started Python for Everybody, one evening at a time"
+      ]
+    },
+    {
+      "type": "gap",
+      "giant": "zzz",
+      "combo": "lilac/sun",
+      "headline": "April and May: off the record.",
+      "body": ["Nothing from these two made it into my notes. Testing season, probably. We’ll call it a quiet stretch."]
+    },
+    {
+      "type": "month",
+      "giant": "jun",
+      "combo": "mint/lilac",
+      "headline": "Summer school, but for you.",
+      "items": [
+        "Finished Python for Everybody",
+        "Wrote your first real script: it renamed 300 class photos in four seconds",
+        "Mapped out a road trip through Utah’s national parks"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "jul",
+      "combo": "tang/sun",
+      "headline": "Builder mode.",
+      "items": [
+        "Started Lab Notes, a web app for logging classroom experiments",
+        "Learned enough Git to stop being scared of it",
+        "Finished the first course of a UX design certificate"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "aug",
+      "combo": "plum/violet",
+      "headline": "Back-to-school speedrun.",
+      "items": [
+        "Rewrote your syllabus to fit on one page",
+        "Rolled Lab Notes out to three classes as a beta",
+        "Pitched a coding club to your principal. They said yes."
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "sep",
+      "combo": "sun/pink",
+      "headline": "Coding club is live.",
+      "items": [
+        "Fourteen students at the first meeting",
+        "Wrote six weekly challenges, starting with a number-guessing game",
+        "Sent off a talk proposal to the state science teachers’ conference"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "oct",
+      "combo": "cobalt/plum",
+      "headline": "Your most-played month.",
+      "items": [
+        "Talk proposal accepted",
+        "Wrote and rehearsed the 20-minute version, then the 15-minute version",
+        "Shipped Lab Notes v2 with photo uploads",
+        "Finished a second Python course on data structures"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "nov",
+      "combo": "mint/sun",
+      "headline": "And you’re still going.",
+      "items": [
+        "Conference talk coming up on November 14",
+        "Drafting a grant application for classroom laptops"
+      ]
+    },
+    {
+      "type": "month",
+      "giant": "all",
+      "combo": "pink/lilac",
+      "headline": "All year, on repeat.",
+      "items": [
+        "Sunday lesson-plan check-ins",
+        "Gerald the sourdough starter, somehow still alive"
+      ]
+    },
+    {
+      "type": "stats",
+      "giant": "3",
+      "combo": "sun/tang",
+      "headline": "Your year in numbers.",
+      "stats": [
+        { "value": "3", "label": "courses finished" },
+        { "value": "3", "label": "tools you built" },
+        { "value": "6", "label": "club challenges written" },
+        { "value": "1", "label": "conference talk accepted" }
+      ]
+    },
+    {
+      "type": "ranking",
+      "giant": "top 5",
+      "combo": "lilac/pink",
+      "headline": "Your top genres.",
+      "items": ["Lesson planning", "Learning Python", "Building Lab Notes", "Coding club", "Event wrangling"]
+    },
+    {
+      "type": "personality",
+      "giant": "you",
+      "combo": "tang/sun",
+      "headline": "Your 2026 personality: the Teacher Who Ships.",
+      "lead": "Lesson planner. Python learner. App builder. Club founder.",
+      "body": ["You learn something on Monday and teach it by Friday."]
+    },
+    {
+      "type": "note",
+      "giant": "hmm",
+      "combo": "mint/lilac",
+      "headline": "One honest note.",
+      "body": [
+        "You started four big things this year and finished three. The UX certificate stalled after course one.",
+        "Pick it back up in January, or let it go on purpose. Either is fine."
+      ]
+    },
+    {
+      "type": "outro",
+      "giant": "2027",
+      "combo": "plum/violet",
+      "headline": "That’s a wrap, Jordan.",
+      "body": ["Here’s to 2027. Go give that talk."],
+      "replay": "Play it again"
+    }
+  ]
+}

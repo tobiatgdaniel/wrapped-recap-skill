@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your year, wrapped</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-plum: #2B0F3D;
+    --c-cobalt: #2A3BD9;
+    --c-violet: #5B2BD6;
+    --c-pink: #FF4F9A;
+    --c-sun: #FFC83D;
+    --c-tang: #FF6A2B;
+    --c-mint: #4FD9A6;
+    --c-lilac: #C3B3FF;
+    --ink-dark: #1B0A26;
+    --ink-light: #FFF8F2;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--c-plum);
+    transition: background-color .5s ease;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --c-plum: #1D0A2A;
+      --c-cobalt: #1F2DB0;
+      --c-violet: #4620AE;
+      --c-pink: #E23D85;
+      --c-sun: #E8B12C;
+      --c-tang: #E2561D;
+      --c-mint: #33B98A;
+      --c-lilac: #A893F0;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --c-plum: #1D0A2A;
+    --c-cobalt: #1F2DB0;
+    --c-violet: #4620AE;
+    --c-pink: #E23D85;
+    --c-sun: #E8B12C;
+    --c-tang: #E2561D;
+    --c-mint: #33B98A;
+    --c-lilac: #A893F0;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--c-plum);
+    font-family: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  #stage {
+    position: relative;
+    height: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .35s ease, visibility 0s linear .35s;
+    --fs: 1; /* shrink factor, set per slide by the auto-fit */
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .35s ease;
+  }
+
+  /* The one bold thing: a giant word that slides up into each slide */
+  .giant {
+    position: absolute;
+    left: -0.04em;
+    bottom: -0.16em;
+    z-index: 0;
+    font-size: min(46vh, 62vw, 19rem);
+    font-weight: 800;
+    font-variation-settings: "opsz" 96;
+    line-height: .8;
+    letter-spacing: -0.065em;
+    white-space: nowrap;
+    color: var(--shape);
+    transform: translateY(45%) rotate(-4deg);
+    transform-origin: left bottom;
+    transition: transform .8s cubic-bezier(.2,.9,.25,1.15);
+    pointer-events: none;
+  }
+  .giant.small { font-size: min(36vh, 46vw, 15rem); }
+  .slide.active .giant { transform: translateY(0) rotate(-4deg); }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: calc(2.25rem + 2rem * var(--fs)) 1.5rem 0;
+    max-width: 28rem;
+  }
+
+  h1, h2 {
+    margin: 0 0 calc(1rem * var(--fs));
+    font-weight: 800;
+    font-variation-settings: "opsz" 96;
+    letter-spacing: -0.035em;
+    line-height: .98;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  h1 { font-size: calc(clamp(2.6rem, 11vw, 3.5rem) * var(--fs)); }
+  h2 { font-size: calc(clamp(2rem, 8.6vw, 2.75rem) * var(--fs)); }
+
+  p, li {
+    font-size: calc(clamp(1rem, 4.2vw, 1.125rem) * var(--fs));
+    line-height: 1.38;
+    font-weight: 400;
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+  p + p { margin-top: calc(.75rem * var(--fs)); }
+
+  .moments {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: calc(.7rem * var(--fs));
+  }
+  .moments li {
+    padding-left: 1.15rem;
+    position: relative;
+  }
+  .moments li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .5em;
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(1.25rem * var(--fs)) 1rem;
+    margin: 0;
+  }
+  .stats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; min-width: 0; }
+  .stats dt { font-size: calc(1rem * var(--fs)); line-height: 1.25; font-weight: 600; }
+  .stats dd {
+    margin: 0;
+    font-size: calc(clamp(3.2rem, 16vw, 4.5rem) * var(--fs));
+    font-weight: 800;
+    line-height: .9;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+
+  .ranking {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: rank;
+    display: grid;
+    gap: calc(.55rem * var(--fs));
+  }
+  .ranking li {
+    counter-increment: rank;
+    display: flex;
+    align-items: baseline;
+    gap: .75rem;
+    font-size: calc(clamp(1.25rem, 5.6vw, 1.5rem) * var(--fs));
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .ranking li::before {
+    content: counter(rank);
+    flex: none;
+    font-weight: 800;
+    font-size: 1.6em;
+    width: 1.1em;
+    letter-spacing: -0.04em;
+  }
+
+  .lead { font-size: calc(clamp(1.1rem, 4.8vw, 1.3rem) * var(--fs)); font-weight: 600; }
+
+  .bars {
+    position: absolute;
+    top: .75rem;
+    left: .75rem;
+    right: .75rem;
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    pointer-events: none;
+  }
+  .bars span {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--bar-ink) 30%, transparent);
+    overflow: hidden;
+  }
+  .bars span i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--bar-ink);
+    transition: width .3s ease;
+  }
+  .bars span.done i { width: 100%; }
+
+  .controls {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 5;
+    display: flex;
+    gap: .5rem;
+  }
+  .controls button, .replay {
+    font: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid var(--bar-ink);
+    color: var(--bar-ink);
+    background: color-mix(in srgb, var(--bar-bg) 70%, transparent);
+    border-radius: 999px;
+    padding: .55rem 1rem;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  .controls button[disabled] { opacity: .35; cursor: default; }
+  .replay {
+    margin-top: calc(1.5rem * var(--fs));
+    border-color: var(--ink);
+    color: var(--ink);
+    background: transparent;
+  }
+  button:focus-visible {
+    outline: 3px solid var(--bar-ink);
+    outline-offset: 3px;
+  }
+
+  .hint {
+    margin-top: calc(1.5rem * var(--fs));
+    font-weight: 600;
+    opacity: .85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .giant, .slide, :root, .bars span i { transition: none !important; }
+    .giant { transform: rotate(-4deg); }
+  }
+</style>
+</head>
+<body>
+<main id="stage" aria-label="Your year on Claude, a recap you tap through">
+  <div class="bars" id="bars" aria-hidden="true"></div>
+  <!-- Slides are rendered here from the WRAPPED data below -->
+  <nav class="controls" aria-label="Slide controls">
+    <button type="button" id="prev" aria-label="Previous slide">Back</button>
+    <button type="button" id="next" aria-label="Next slide">Next</button>
+  </nav>
+</main>
+
+<script>
+// ===== BEGIN WRAPPED DATA =====
+// The skill replaces everything between these two markers with one object.
+// Slide types: intro, month, gap, stats, ranking, personality, note, outro.
+// combo is "background/shape" from: plum, cobalt, violet, pink, sun, tang, mint, lilac.
+// Leave combo out and the page picks one so neighbouring slides never share a background.
+const WRAPPED = {
+  "lang": "en-GB",
+  "title": "[Name]’s [period], wrapped",
+  "label": "[Name]’s [period] on Claude, a recap you tap through",
+  "slides": [
+    { "type": "intro", "giant": "[yr]", "combo": "plum/cobalt",
+      "headline": "[Name], here’s your [period] on Claude.",
+      "body": ["[One short line that sums up the year.]"],
+      "hint": "Tap to unwrap." },
+    { "type": "month", "giant": "[mon]", "combo": "cobalt/plum",
+      "headline": "[Short warm headline for the month.]",
+      "items": ["[Highlight one]", "[Highlight two]"] },
+    { "type": "gap", "giant": "zzz", "combo": "lilac/sun",
+      "headline": "[Month] to [month]: off the record.",
+      "body": ["[One honest line about the quiet stretch.]"] },
+    { "type": "stats", "giant": "[n]", "combo": "sun/pink",
+      "headline": "Your year in numbers.",
+      "stats": [ { "value": "[n]", "label": "[what was counted]" },
+                 { "value": "[n]", "label": "[what was counted]" } ] },
+    { "type": "ranking", "giant": "top 5", "combo": "mint/sun",
+      "headline": "Your top genres.",
+      "items": ["[Genre]", "[Genre]", "[Genre]", "[Genre]", "[Genre]"] },
+    { "type": "personality", "giant": "you", "combo": "pink/lilac",
+      "headline": "Your [period] personality: the [Title].",
+      "lead": "[Four or five quick roles, full stops between.]",
+      "body": ["[One playful line.]"] },
+    { "type": "note", "giant": "hmm", "combo": "lilac/pink",
+      "headline": "One honest note.",
+      "body": ["[Kind, specific observation.]", "[One suggestion.]"] },
+    { "type": "outro", "giant": "[next]", "combo": "plum/violet",
+      "headline": "That’s a wrap, [Name].",
+      "body": ["[Send-off line.]"],
+      "replay": "Play it again" }
+  ]
+};
+// ===== END WRAPPED DATA =====
+
+(function () {
+  var PALETTE = ['plum', 'cobalt', 'violet', 'pink', 'sun', 'tang', 'mint', 'lilac'];
+  var LIGHT_INK_BGS = { plum: 1, cobalt: 1, violet: 1 };
+  // Tested combos (text contrast checked in light and dark mode, text over the shape too)
+  var ROTATION = ['cobalt/plum', 'lilac/sun', 'sun/tang', 'pink/sun', 'mint/lilac', 'tang/sun',
+                  'plum/violet', 'sun/pink', 'mint/sun', 'pink/lilac', 'lilac/pink', 'plum/cobalt'];
+  var TYPES = { intro: 1, month: 1, gap: 1, stats: 1, ranking: 1, personality: 1, note: 1, outro: 1 };
+
+  var data = WRAPPED || {};
+  var root = document.documentElement;
+  if (data.lang) root.lang = data.lang;
+  if (data.title) document.title = data.title;
+
+  var stage = document.getElementById('stage');
+  if (data.label) stage.setAttribute('aria-label', data.label);
+  var barsEl = document.getElementById('bars');
+  var controls = stage.querySelector('.controls');
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+
+  function bgOf(combo) { return combo ? combo.split('/')[0] : null; }
+  function validCombo(c) {
+    if (typeof c !== 'string') return false;
+    var p = c.split('/');
+    return p.length === 2 && PALETTE.indexOf(p[0]) > -1 && PALETTE.indexOf(p[1]) > -1 && p[0] !== p[1];
+  }
+
+  // Assign colour combos: keep valid ones given, fill the rest so neighbours never share a background.
+  var specs = (data.slides || []).filter(function (s) {
+    if (!s || !TYPES[s.type]) { console.warn('[wrapped] skipped slide with unknown type', s); return false; }
+    return true;
+  });
+  var r = 0;
+  specs.forEach(function (s, i) {
+    if (s.combo && !validCombo(s.combo)) { console.warn('[wrapped] invalid combo', s.combo); s.combo = null; }
+    var prev = i > 0 ? bgOf(specs[i - 1].combo) : null;
+    if (s.combo && bgOf(s.combo) === prev) {
+      console.warn('[wrapped] slide ' + (i + 1) + ' repeats the previous background; picking another');
+      s.combo = null;
+    }
+    if (!s.combo) {
+      var next = specs[i + 1] && validCombo(specs[i + 1].combo) ? bgOf(specs[i + 1].combo) : null;
+      for (var t = 0; t < ROTATION.length; t++) {
+        var c = ROTATION[(r + t) % ROTATION.length];
+        if (bgOf(c) !== prev && bgOf(c) !== next) { s.combo = c; r = (r + t + 1) % ROTATION.length; break; }
+      }
+    }
+  });
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function paras(parent, list, cls) {
+    (list || []).forEach(function (t) { if (t) parent.appendChild(el('p', cls || null, t)); });
+  }
+
+  function buildSlide(s) {
+    var parts = s.combo.split('/');
+    var sec = el('section', 'slide');
+    sec.dataset.type = s.type;
+    sec.style.setProperty('--bg', 'var(--c-' + parts[0] + ')');
+    sec.style.setProperty('--shape', 'var(--c-' + parts[1] + ')');
+    sec.style.setProperty('--ink', LIGHT_INK_BGS[parts[0]] ? 'var(--ink-light)' : 'var(--ink-dark)');
+
+    var word = String(s.giant || '');
+    if (word) {
+      var g = el('div', 'giant', word);
+      if (word.length >= 5 || s.giantSize === 'small') g.classList.add('small');
+      g.setAttribute('aria-hidden', 'true');
+      sec.appendChild(g);
+    }
+
+    var c = el('div', 'content');
+    c.appendChild(el(s.type === 'intro' ? 'h1' : 'h2', null, s.headline || ''));
+
+    switch (s.type) {
+      case 'month': {
+        var ul = el('ul', 'moments');
+        (s.items || []).forEach(function (t) { ul.appendChild(el('li', null, t)); });
+        c.appendChild(ul);
+        paras(c, s.body);
+        break;
+      }
+      case 'stats': {
+        var dl = el('dl', 'stats');
+        (s.stats || []).forEach(function (st) {
+          var d = el('div');
+          d.appendChild(el('dt', null, st.label));
+          d.appendChild(el('dd', null, String(st.value)));
+          dl.appendChild(d);
+        });
+        c.appendChild(dl);
+        break;
+      }
+      case 'ranking': {
+        var ol = el('ol', 'ranking');
+        (s.items || []).slice(0, 5).forEach(function (t) { ol.appendChild(el('li', null, t)); });
+        c.appendChild(ol);
+        break;
+      }
+      case 'personality':
+        if (s.lead) c.appendChild(el('p', 'lead', s.lead));
+        paras(c, s.body);
+        break;
+      case 'intro':
+        paras(c, s.body);
+        if (s.hint) c.appendChild(el('p', 'hint', s.hint));
+        break;
+      case 'outro': {
+        paras(c, s.body);
+        var b = el('button', 'replay', s.replay || 'Play it again');
+        b.type = 'button';
+        b.addEventListener('click', function () { show(0); });
+        c.appendChild(b);
+        break;
+      }
+      default: // gap, note
+        paras(c, s.body);
+    }
+    sec.appendChild(c);
+    return sec;
+  }
+
+  var slides = specs.map(function (s) {
+    var sec = buildSlide(s);
+    stage.insertBefore(sec, controls);
+    return sec;
+  });
+
+  slides.forEach(function (s, i) {
+    var b = document.createElement('span');
+    b.appendChild(document.createElement('i'));
+    barsEl.appendChild(b);
+    s.setAttribute('role', 'group');
+    s.setAttribute('aria-roledescription', 'slide');
+    s.setAttribute('aria-label', (i + 1) + ' of ' + slides.length);
+  });
+  var bars = Array.prototype.slice.call(barsEl.children);
+
+  // Auto-fit: shrink a slide's type step by step until its text clears the Back/Next buttons
+  // and nothing spills sideways. Slides that still don't fit are flagged in wrappedReport().
+  var MIN_FS = 0.76; // below this, body text gets too small to read on a phone
+  function fits(sec) {
+    var c = sec.querySelector('.content');
+    var limit = controls.getBoundingClientRect().top - 8;
+    return c.getBoundingClientRect().bottom <= limit && c.scrollWidth <= c.clientWidth + 1;
+  }
+  function fit(sec) {
+    var fs = 1;
+    sec.style.setProperty('--fs', fs);
+    while (!fits(sec) && fs > MIN_FS) {
+      fs = Math.round((fs - 0.04) * 100) / 100;
+      sec.style.setProperty('--fs', fs);
+    }
+    sec.dataset.fs = fs;
+    sec.dataset.overflow = fits(sec) ? 'false' : 'true';
+    if (sec.dataset.overflow === 'true') {
+      console.warn('[wrapped] slide ' + sec.getAttribute('aria-label') + ' is too long; trim its copy');
+    }
+  }
+  function fitAll() { slides.forEach(fit); }
+  window.wrappedReport = function () {
+    return slides.map(function (s, i) {
+      return { slide: i + 1, type: s.dataset.type, scale: Number(s.dataset.fs), overflow: s.dataset.overflow === 'true' };
+    });
+  };
+
+  var idx = 0;
+  function show(i) {
+    if (!slides.length) return;
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, n) {
+      var on = n === idx;
+      s.classList.toggle('active', on);
+      s.setAttribute('aria-hidden', on ? 'false' : 'true');
+      if (on) { s.removeAttribute('inert'); } else { s.setAttribute('inert', ''); }
+    });
+    bars.forEach(function (b, n) { b.classList.toggle('done', n <= idx); });
+    var cs = getComputedStyle(slides[idx]);
+    var bg = cs.backgroundColor;
+    var ink = cs.color;
+    stage.style.setProperty('--bar-ink', ink);
+    stage.style.setProperty('--bar-bg', bg);
+    root.style.backgroundColor = bg;
+    document.body.style.backgroundColor = bg;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === slides.length - 1;
+  }
+
+  stage.addEventListener('click', function (e) {
+    if (e.target.closest('button')) return;
+    var rect = stage.getBoundingClientRect();
+    if (e.clientX - rect.left < rect.width * 0.3) { show(idx - 1); } else { show(idx + 1); }
+  });
+  prevBtn.addEventListener('click', function () { show(idx - 1); });
+  nextBtn.addEventListener('click', function () { show(idx + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(idx + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
+    if (e.key === 'Home') { e.preventDefault(); show(0); }
+    if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }
+  });
+
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var refresh = function () { show(idx); };
+    if (mq.addEventListener) { mq.addEventListener('change', refresh); }
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fitAll, 120);
+  });
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fitAll); }
+
+  fitAll();
+  show(0);
+})();
+</script>
+</body>
+</html>
